@@ -3,16 +3,16 @@ import SearchItem from './SearchItem';
 import AddItem from './AddItem';
 import Content from './Content';
 import Footer from './Footer';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { useRef } from 'react';
 function App() {
   const inputRef = useRef();
-  const [items, setItems] = useState(JSON.parse(localStorage.getItem('shoppingList')));
-const setSaveItems = (newList) => {
-  setItems(newList);
-  localStorage.setItem('shoppingList', JSON.stringify(newList));
-  return;
-}
+  const [items, setItems] = useState(JSON.parse(localStorage.getItem('shoppingList')) || []);
+  
+  useEffect(()=>{
+    localStorage.setItem('shoppingList', JSON.stringify(items));
+  },[items]);
+
 const [search, setSearch] = useState('')
 const [newItem, setNewItem] = useState('');
 const addItem = (item) => {
@@ -20,17 +20,17 @@ const addItem = (item) => {
 
   const myNewItem  = {id , checked:false, item}
   const newList = [...items, myNewItem];  
-  setSaveItems(newList);
+  setItems(newList);
   
 }
 const handleClick = (id) => {
     const listItems = items.map((item) => item.id === id ? { ...item, checked: !item.checked} : item);
-   setSaveItems(listItems);
+   setItems(listItems);
 }
 
 const handleDelete = (id) => {
     const listItems = items.filter((item) => item.id !== id);
-    setSaveItems(listItems);
+    setItems(listItems);
 
 }
 
